@@ -6,6 +6,21 @@
   with_items:
     - graphviz
     - copr-cli
+    - mock
+    - rpm-build
+    - rpmdevtools
+    - flatpack
+    - gdb
+    - pkgdiff
+    - fedora-review
+    - scl-utils-build
+    - fedora-repos-rawhide
+    - module-build-service
+    - pyp2rpm
+    - origin-clients
+    - modtools
+    - atomic-reactor
+    - krb5-devel
     - python-novaclient
 
 - name: Enable repositories for SCLo variant of centpkg
