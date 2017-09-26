@@ -1,0 +1,10 @@
+---
+# This Playbook would deploy the whole coreservices-jenkins slave cluster
+
+- hosts: centos-7
+  roles:
+  - role: common_init
+  - role: common_tools
+  - role: docker_builder
+  - role: packager
+

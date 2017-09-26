@@ -1,0 +1,30 @@
+---
+- name: Install basic tools
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - yum-utils
+    - vim-enhanced
+    - git
+    - wget
+    - rsync
+    - perl
+    - perl-Git
+    - python-devel
+    - python-setuptools
+    - python-virtualenv
+    - jpackage-utils
+    - java
+    - ca-certificates
+    - ntp
+    - "@Development Tools"
+
+- name: Run the basic services
+  service:
+    state: started
+    name: "{{ item }}"
+    enabled: yes
+  with_items:
+    - ntpd
+

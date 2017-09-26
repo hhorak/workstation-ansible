@@ -1,0 +1,21 @@
+---
+- name: Install tools for packagers
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - graphviz
+    - copr-cli
+    - python-novaclient
+
+- name: Enable repositories for SCLo variant of centpkg
+  shell: |
+    dnf -y copr enable hhorak/centpkg-sclo
+
+- name: Install tools for packagers
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - centos-packager
+

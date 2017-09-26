@@ -1,0 +1,10 @@
+---
+- name: enable EPEL repository
+  yum:
+    name: "{{ epel_repo }}"
+    state: installed
+
+- name: Install Copr
+  yum:
+    name: copr-cli
+    state: latest

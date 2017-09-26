@@ -1,0 +1,4 @@
+# place for common variables
+# format:
+#   key: value
+installer: yum

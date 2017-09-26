@@ -1,0 +1,44 @@
+---
+- name: Install docker
+  yum: name={{ item }}
+       state=latest
+  with_items:
+    - docker
+    - source-to-image
+    - golang-github-cpuguy83-go-md2man
+    - groff-base
+    - atomic
+    - python-docker-squash
+
+- name: Install oc
+  dnf: name={{ item }}
+       state=latest
+  with_items:
+    - origin-clients
+  when: releasever > 24
+
+- name: Install oc
+  yum: name={{ item }}
+       state=latest
+  with_items:
+    - atomic-openshift-clients
+  when: releasever == 7
+
+- name: Uncomment insecure registry for brew docker registry
+  lineinfile:
+    path: /etc/containers/registries.conf
+    regexp: 'insecure_registries:'
+    line: 'insecure_registries:'
+
+- name: Add brew docker registry
+  lineinfile:
+    path: /etc/containers/registries.conf
+    insertafter: 'insecure_registries:'
+    line: '  - {{ item }}'
+  with_items:
+    - 'registry.centos.org'
+    - 'brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888'
+    - 172.30.0.0/16
+
+- name: Start and enable docker
+  systemd: state=started name=docker enabled=yes
