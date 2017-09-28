@@ -3,6 +3,18 @@
   yum:
     name: "{{ epel_repo }}"
     state: installed
+  tags:
+    - centos
+
+- name: enable sig repositories
+  yum:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - centos-release-scl
+    - centos-release-openshift-origin
+  tags:
+    - centos
 
 - name: Install Copr
   yum:

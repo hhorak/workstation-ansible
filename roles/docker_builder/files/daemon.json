@@ -1,0 +1,3 @@
+{
+  "insecure-registries" : ["registry.centos.org", "brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888", "172.30.0.0/16"]
+}

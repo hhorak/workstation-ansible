@@ -1,4 +1,5 @@
 releasever: 7
+distro: centos
 
 # often fails: http://download.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-10.noarch.rpm
 epel_repo: https://mirrors.lug.mtu.edu/epel/7/x86_64/e/epel-release-7-10.noarch.rpm

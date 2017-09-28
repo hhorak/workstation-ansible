@@ -9,23 +9,45 @@
     - mock
     - rpm-build
     - rpmdevtools
-    - flatpack
     - gdb
     - pkgdiff
-    - fedora-review
     - scl-utils-build
+    - pyp2rpm
+    - krb5-devel
+  tags:
+    - packager
+
+- name: Install tools for packagers (Fedora only)
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - flatpack
     - fedora-repos-rawhide
     - module-build-service
-    - pyp2rpm
-    - origin-clients
     - modtools
-    - atomic-reactor
-    - krb5-devel
-    - python-novaclient
+    - fedora-review
+  tags:
+    - packager
+  when:
+    - distro == 'fedora'
 
 - name: Enable repositories for SCLo variant of centpkg
   shell: |
     dnf -y copr enable hhorak/centpkg-sclo
+  tags:
+    - packager
+  when:
+    - distro == 'fedora'
+
+- name: Enable copr with centpkg-sclo
+  get_url:
+    url: http://copr.fedorainfracloud.org/coprs/hhorak/centpkg-sclo/repo/epel-{{ releasever }}/hhorak-centpkg-sclo-epel-{{ releasever }}.repo
+    dest: /etc/yum.repos.d/hhorak-centpkg-sclo-epel-{{ releasever }}.repo
+  tags:
+    - packager
+  when:
+    - distro == 'centos'
 
 - name: Install tools for packagers
   yum:
@@ -33,4 +55,6 @@
     state: latest
   with_items:
     - centos-packager
+  tags:
+    - packager
 

@@ -1,4 +1,11 @@
 ---
+- name: Enable copr with docker-squash
+  get_url:
+    url: https://copr.fedorainfracloud.org/coprs/hhorak/docker-squash/repo/epel-7/hhorak-docker-squash-epel-7.repo
+    dest: /etc/yum.repos.d/hhorak-docker-squash-epel-7.repo
+  tags:
+    - docker
+
 - name: Install docker
   yum: name={{ item }}
        state=latest
@@ -9,6 +16,9 @@
     - groff-base
     - atomic
     - python-docker-squash
+    - atomic-reactor
+  tags:
+    - docker
 
 - name: Install oc
   dnf: name={{ item }}
@@ -16,29 +26,59 @@
   with_items:
     - origin-clients
   when: releasever > 24
+  tags:
+    - docker
 
 - name: Install oc
   yum: name={{ item }}
        state=latest
   with_items:
     - atomic-openshift-clients
-  when: releasever == 7
+  when:
+    - releasever == 7
+    - distro == 'rhel'
+  tags:
+    - docker
 
-- name: Uncomment insecure registry for brew docker registry
-  lineinfile:
-    path: /etc/containers/registries.conf
-    regexp: 'insecure_registries:'
-    line: 'insecure_registries:'
-
-- name: Add brew docker registry
-  lineinfile:
-    path: /etc/containers/registries.conf
-    insertafter: 'insecure_registries:'
-    line: '  - {{ item }}'
+- name: Install oc
+  yum: name={{ item }}
+       state=latest
   with_items:
-    - 'registry.centos.org'
-    - 'brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888'
-    - 172.30.0.0/16
+    - origin-clients
+  when:
+    - releasever == 7
+    - distro == 'centos'
+  tags:
+    - docker
+
+# configuration for docker 1.12
+- name: Add insecure registries to the docker dameon
+  copy:
+    src: files/daemon.json
+    dest: /etc/docker/daemon.json
+
+# for docker 1.13 and further:
+#- name: Uncomment insecure registry for brew docker registry
+#  lineinfile:
+#    path: /etc/containers/registries.conf
+#    regexp: 'insecure_registries:'
+#    line: 'insecure_registries:'
+#  tags:
+#    - docker
+
+#- name: Add brew docker registry
+#  lineinfile:
+#    path: /etc/containers/registries.conf
+#    insertafter: 'insecure_registries:'
+#    line: '  - {{ item }}'
+#  with_items:
+#    - 'registry.centos.org'
+#    - 'brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888'
+#    - 172.30.0.0/16
+#  tags:
+#    - docker
 
 - name: Start and enable docker
   systemd: state=started name=docker enabled=yes
+  tags:
+    - docker

@@ -4,6 +4,7 @@
 - hosts: centos-7
   roles:
   - role: common_init
+  - role: centos
   - role: common_tools
   - role: docker_builder
   - role: packager

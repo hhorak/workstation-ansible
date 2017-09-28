@@ -22,8 +22,10 @@
     name: "{{ item }}"
     state: latest
   with_items:
+    - chromium
     - gimp
     - inkscape
+    - thunderbird
     - '@LibreOffice'
 
 - name: Run the basic services
@@ -61,6 +63,12 @@
     - python-bugzilla
     - python-requests-kerberos
     - python-unicodecsv
+
+- name: Install commonly used python3 packages
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
     - python3
     - python3-click
     - python3-devel
@@ -70,8 +78,7 @@
     - python3-GitPython
     - python3-requests-kerberos
     - python3-unicodecsv
-    - python3-neutronclient
-    - python2-neutronclient
+  when: releasever > 15
 
 - name: install the rpmfusion repo packages
   yum: name={{ item }}
